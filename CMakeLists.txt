@@ -13,6 +13,7 @@ include_directories(include)
 add_executable(black_navy_war application.cpp 
     src/renderer.cpp 
     src/vertex_buffer.cpp 
-    src/index_buffer.cpp)
+    src/index_buffer.cpp
+    src/shader.cpp)
 
 target_link_libraries(black_navy_war glfw OpenGL::GL GLEW::GLEW)

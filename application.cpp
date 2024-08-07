@@ -6,44 +6,8 @@
 #include "graphics/renderer.hpp"
 #include "graphics/vertex_buffer.hpp"
 #include "graphics/index_buffer.hpp"
+#include "graphics/shader.hpp"
 
-
-static unsigned int CompileShader(unsigned int type, const std::string& source) {
-    unsigned int id = glCreateShader(type);
-    const char* src = source.c_str();
-    glShaderSource(id, 1, &src, nullptr);
-    glCompileShader(id);
-
-    int result;
-    glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-    if (result != GL_TRUE) { // Doing some error handling
-        int length;
-        glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-        char* message = (char *)alloca(length * sizeof(char));
-        glGetShaderInfoLog(id, length, &length, message);
-        std::cout << "Failed to compile " << (type==GL_VERTEX_SHADER ? "Vertex Shader " : "Fragment Shader ") << message << '\n'; 
-        glDeleteShader(id);
-        return 0;
-    }
-
-    return id;
-}
-
-static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader) {
-    unsigned int program = glCreateProgram();
-    unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-    unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
-
-    glAttachShader(program, vs);
-    glAttachShader(program, fs);
-    glLinkProgram(program);
-    glValidateProgram(program);
-
-    glDeleteShader(vs);
-    glDeleteShader(fs);
-
-    return program;
-}
 
 int main() {
 
@@ -58,7 +22,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
     /* Create a windowed mode window and its OpenGL context */
-    GLFWwindow* window = glfwCreateWindow(800, 800, "cpp Black Navy War", NULL, NULL);;
+    GLFWwindow* window = glfwCreateWindow(800, 800, "cpp Black Navy War", NULL, NULL);
 
     if (!window)
     {
@@ -142,7 +106,7 @@ int main() {
     IndexBuffer sea_line_ib(sea_line_indices, 4);
 
 
-    const std::string vertexShader =
+    const std::string vertexShader = // Initialize Vertex Shaders
         R"(#version 330 core
         layout(location = 0) in vec4 position;
         void main()
@@ -150,7 +114,7 @@ int main() {
            gl_Position = position;
         })";
 
-    const std::string fragmentShader =
+    const std::string fragmentShader = // Initialize Fragment Shaders
         R"(#version 330 core
         layout(location = 0) out vec4 color;
 
@@ -161,18 +125,15 @@ int main() {
            color = u_Color;
         })";
 
-
-    unsigned int shader = CreateShader(vertexShader, fragmentShader);
-    glUseProgram(shader);
-
-    int location = glGetUniformLocation(shader, "u_Color");
-    glUniform4f(location, 0.5f, 0.5f, 0.5f, 1.0f);
+    // Create and compile shaders
+    Shader shader(vertexShader, fragmentShader);
+    shader.Bind();
+    shader.SetUniform4f("u_Color", 0.5f, 0.5f, 0.5f, 1.0f);
 
     glBindVertexArray(0);
-    glUseProgram(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+    shader.UnBind();
+    vb.UnBind();
+    ib.UnBind();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -180,19 +141,19 @@ int main() {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shader);
+        shader.Bind();
 
-        glUniform4f(location, 0.5f, 0.5f, 0.55f, 1.0f); // Draw background
+        shader.SetUniform4f("u_Color", 0.5f, 0.5f, 0.55f, 1.0f); // Draw background
         background_color_ib.Bind();
         glBindVertexArray(background_vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-        glUniform4f(location, 0.1f, 0.1f, 0.1f, 1.0f); // Draw bases
+        shader.SetUniform4f("u_Color", 0.1f, 0.1f, 0.1f, 1.0f); // Draw bases
         glBindVertexArray(vao);
         ib.Bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-        glUniform4f(location, 0.1f, 0.1f, 0.1f, 1.0f); // Draw bases
+        shader.SetUniform4f("u_Color", 0.1f, 0.1f, 0.1f, 1.0f); // Draw bases
         glBindVertexArray(sea_line_vao);
         sea_line_ib.Bind();
         glDrawElements(GL_LINES, 4, GL_UNSIGNED_INT, nullptr);
@@ -205,8 +166,6 @@ int main() {
         /* Poll for and process events */
         glfwPollEvents();
     }
-    
-    glDeleteProgram(shader);
 
     glfwTerminate();
     return 0;
