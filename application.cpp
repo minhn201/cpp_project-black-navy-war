@@ -76,22 +76,24 @@ int main() {
         return -1;
     }
 
-
-    // float positions[] = {
-    // -0.5f, -0.5f,
-    // 0.5f, -0.5f,
-    // 0.5f, 0.5f,
-    // -0.5f, 0.5f
-    // };
     float positions[] = {
-    -1.0f, -0.5f,
-    -0.7f, -0.5f,
-    -1.0f, 0.5f,
+        -1.0f, -0.5f,
+        -0.7f, -0.5f,
+        -1.0f, 0.5f,
 
-    0.7f, -0.5f,
-    1.0f, -0.5f,
-    1.0f, 0.5f,
+        0.7f, -0.5f,
+        1.0f, -0.5f,
+        1.0f, 0.5f,
     };
+
+    float background_color[] = {
+        -1.0f, -1.0f,
+        1.0f, -1.0f,
+        1.0f, 1.0f,
+        -1.0f, 1.0f
+    };
+
+    unsigned int background_indices[] = {0, 1, 2, 2, 3, 0};
 
     unsigned int indices[] = {0, 1, 2, 3, 4, 5};
 
@@ -107,6 +109,17 @@ int main() {
 
 
     IndexBuffer ib(indices, 6);
+
+    unsigned int background_vao;
+    glGenVertexArrays(1, &background_vao);
+    glBindVertexArray(background_vao);
+
+    VertexBuffer background_color_vb(background_color, sizeof(background_color));
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+
+    IndexBuffer background_color_ib(background_indices, 6);
 
 
     const std::string vertexShader =
@@ -148,12 +161,17 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shader);
-        glUniform4f(location, 0.5f, 0.5f, 0.5f, 1.0f);
 
+        glUniform4f(location, 0.5f, 0.5f, 0.55f, 1.0f); // Draw background
+        background_color_ib.Bind();
+        glBindVertexArray(background_vao);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+        glUniform4f(location, 0.4f, 0.4f, 0.4f, 1.0f); // Draw bases
         glBindVertexArray(vao);
         ib.Bind();
-
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
 
 
         /* Swap front and back buffers */
