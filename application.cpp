@@ -77,31 +77,14 @@ int main() {
     VertexBuffer vb(positions, sizeof(positions));
 
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
     IndexBuffer ib(indices, 6);
 
-    // Set up arrays and buffers for background
-    unsigned int background_vao;
-    glGenVertexArrays(1, &background_vao);
-    glBindVertexArray(background_vao);
-
     VertexBuffer background_color_vb(background_color, sizeof(background_color));
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
     IndexBuffer background_color_ib(background_indices, 6);
 
-    // Set up arrays and buffers for line
-    unsigned int sea_line_vao;
-    glGenVertexArrays(1, &sea_line_vao);
-    glBindVertexArray(sea_line_vao);
-
     VertexBuffer sea_line_vb(sea_line, sizeof(sea_line));
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
     IndexBuffer sea_line_ib(sea_line_indices, 4);
 
@@ -130,10 +113,6 @@ int main() {
     shader.Bind();
     shader.SetUniform4f("u_Color", 0.5f, 0.5f, 0.5f, 1.0f);
 
-    glBindVertexArray(0);
-    shader.UnBind();
-    vb.UnBind();
-    ib.UnBind();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -142,20 +121,24 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader.Bind();
+        glBindVertexArray(vao);
 
         shader.SetUniform4f("u_Color", 0.5f, 0.5f, 0.55f, 1.0f); // Draw background
         background_color_ib.Bind();
-        glBindVertexArray(background_vao);
+        background_color_vb.Bind();
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         shader.SetUniform4f("u_Color", 0.1f, 0.1f, 0.1f, 1.0f); // Draw bases
-        glBindVertexArray(vao);
+        vb.Bind();
         ib.Bind();
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         shader.SetUniform4f("u_Color", 0.1f, 0.1f, 0.1f, 1.0f); // Draw bases
-        glBindVertexArray(sea_line_vao);
         sea_line_ib.Bind();
+        sea_line_vb.Bind();
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
         glDrawElements(GL_LINES, 4, GL_UNSIGNED_INT, nullptr);
 
 
