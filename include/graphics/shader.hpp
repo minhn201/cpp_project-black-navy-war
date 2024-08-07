@@ -2,6 +2,8 @@
 #define SHADER_HPP
 
 #include <string>
+#include <iostream>
+#include <GL/glew.h>
 
 class Shader {
     private:

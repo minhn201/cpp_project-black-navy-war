@@ -1,6 +1,8 @@
 #ifndef INDEX_BUFFER_HPP
 #define INDEX_BUFFER_HPP
 
+#include <GL/glew.h>
+
 class IndexBuffer {
     private:
         unsigned int m_RendererID;

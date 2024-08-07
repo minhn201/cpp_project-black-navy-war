@@ -1,7 +1,4 @@
 #include "graphics/shader.hpp"
-#include "graphics/renderer.hpp"
-#include <iostream>
-#include <string>
 
 
 Shader::Shader(const std::string& vertexShader, const std::string& fragmentShader) : shader_id_(0), vertex_shader_(vertexShader), fragment_shader_(fragmentShader) {

@@ -1,6 +1,9 @@
 #ifndef VERTEX_BUFFER_HPP
 #define VERTEX_BUFFER_HPP
 
+#include <GL/glew.h>
+
+
 class VertexBuffer {
     private:
         unsigned int m_RendererID;
