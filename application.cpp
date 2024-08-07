@@ -93,11 +93,19 @@ int main() {
         -1.0f, 1.0f
     };
 
-    unsigned int background_indices[] = {0, 1, 2, 2, 3, 0};
+    float sea_line[] = {
+        -1.0f, 0.0f,
+        1.0f, 0.0f
+    };
+
 
     unsigned int indices[] = {0, 1, 2, 3, 4, 5};
 
+    unsigned int background_indices[] = {0, 1, 2, 2, 3, 0};
 
+    unsigned int sea_line_indices[] = {0, 1};
+
+    // Set up arrays and buffers for bases
     unsigned int vao;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -107,9 +115,9 @@ int main() {
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
-
     IndexBuffer ib(indices, 6);
 
+    // Set up arrays and buffers for background
     unsigned int background_vao;
     glGenVertexArrays(1, &background_vao);
     glBindVertexArray(background_vao);
@@ -120,6 +128,18 @@ int main() {
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
 
     IndexBuffer background_color_ib(background_indices, 6);
+
+    // Set up arrays and buffers for line
+    unsigned int sea_line_vao;
+    glGenVertexArrays(1, &sea_line_vao);
+    glBindVertexArray(sea_line_vao);
+
+    VertexBuffer sea_line_vb(sea_line, sizeof(sea_line));
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+
+    IndexBuffer sea_line_ib(sea_line_indices, 4);
 
 
     const std::string vertexShader =
@@ -167,10 +187,15 @@ int main() {
         glBindVertexArray(background_vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
-        glUniform4f(location, 0.4f, 0.4f, 0.4f, 1.0f); // Draw bases
+        glUniform4f(location, 0.1f, 0.1f, 0.1f, 1.0f); // Draw bases
         glBindVertexArray(vao);
         ib.Bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+        glUniform4f(location, 0.1f, 0.1f, 0.1f, 1.0f); // Draw bases
+        glBindVertexArray(sea_line_vao);
+        sea_line_ib.Bind();
+        glDrawElements(GL_LINES, 4, GL_UNSIGNED_INT, nullptr);
 
 
 
