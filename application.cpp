@@ -8,6 +8,17 @@
 #include "graphics/index_buffer.hpp"
 #include "graphics/shader.hpp"
 
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    RenderWindow* render_window = static_cast<RenderWindow*>(glfwGetWindowUserPointer(window));
+
+    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+        if (key == GLFW_KEY_RIGHT) {
+            render_window->update_offset_right();
+        } else if (key == GLFW_KEY_LEFT) {
+            render_window->update_offset_left();
+        }
+    } 
+}
 
 int main() {
 
@@ -35,19 +46,26 @@ int main() {
 
     glfwSwapInterval(1);
 
+    // Create a RenderWindow
+    RenderWindow render_window(20, 100);
+
+    glfwSetWindowUserPointer(window, &render_window);
+
+    glfwSetKeyCallback(window, keyCallback);
+
     if (glewInit() != GLEW_OK) {
         glfwTerminate();
         return -1;
     }
 
-    float positions[] = {
-        -1.0f, -0.5f,
-        -0.7f, -0.5f,
-        -1.0f, 0.5f,
+    float base_positions[] = {
+        0.0f, -0.5f,
+        10.0f, -0.5f,
+        0.0f, 0.5f,
 
-        0.7f, -0.5f,
-        1.0f, -0.5f,
-        1.0f, 0.5f,
+        90.0f, -0.5f,
+        100.0f, -0.5f,
+        100.0f, 0.5f
     };
 
     float background_color[] = {
@@ -74,7 +92,7 @@ int main() {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
-    VertexBuffer vb(positions, sizeof(positions));
+    VertexBuffer vb(base_positions, sizeof(base_positions));
 
     glEnableVertexAttribArray(0);
 
@@ -113,7 +131,6 @@ int main() {
     shader.Bind();
     shader.SetUniform4f("u_Color", 0.5f, 0.5f, 0.5f, 1.0f);
 
-
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -121,21 +138,18 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader.Bind();
-        glBindVertexArray(vao);
 
         shader.SetUniform4f("u_Color", 0.5f, 0.5f, 0.55f, 1.0f); // Draw background
-        background_color_ib.Bind();
-        background_color_vb.Bind();
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        render_window.draw_object(vao, background_color_vb, background_color_ib);
 
+        float norm_positions[12];
+        render_window.normalize_vb(base_positions, norm_positions, 12);
+        VertexBuffer my_vb(norm_positions, sizeof(norm_positions));
         shader.SetUniform4f("u_Color", 0.1f, 0.1f, 0.1f, 1.0f); // Draw bases
-        vb.Bind();
-        ib.Bind();
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        render_window.draw_object(vao, my_vb, ib);
+        
 
-        shader.SetUniform4f("u_Color", 0.1f, 0.1f, 0.1f, 1.0f); // Draw bases
+        shader.SetUniform4f("u_Color", 0.1f, 0.1f, 0.1f, 1.0f); // Draw sea line
         sea_line_ib.Bind();
         sea_line_vb.Bind();
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
