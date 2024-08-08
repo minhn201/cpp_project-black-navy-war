@@ -20,17 +20,19 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
     } 
 }
 
-int main() {
 
+int main() {
     /* Initialize the library */
     if (!glfwInit()) {
-        return -1;
+	    return -1;
     }
+
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+   
     
     /* Create a windowed mode window and its OpenGL context */
     GLFWwindow* window = glfwCreateWindow(800, 800, "cpp Black Navy War", NULL, NULL);
@@ -53,6 +55,8 @@ int main() {
 
     glfwSetKeyCallback(window, keyCallback);
 
+
+    glewExperimental = GL_TRUE; // Magic line that makes it so the whole program doesn't seg fault
     if (glewInit() != GLEW_OK) {
         glfwTerminate();
         return -1;
@@ -86,6 +90,8 @@ int main() {
     unsigned int background_indices[] = {0, 1, 2, 2, 3, 0};
 
     unsigned int sea_line_indices[] = {0, 1};
+
+
 
     // Set up arrays and buffers for bases
     unsigned int vao;
