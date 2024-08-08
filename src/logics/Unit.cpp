@@ -1,4 +1,4 @@
-#include "logic/Unit.hpp"
+#include "logics/Unit.hpp"
 
 const std::string type_patrol = "Patrol Boat";
 const std::string type_destroyer = "Destroyer";
