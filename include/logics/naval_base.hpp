@@ -32,16 +32,3 @@ class NavalBase {
 };
 
 #endif
-
-/*
-
-Create a naval base. It will have current hp and max hp as well as HP regeneration amount
-
-member functions will include:
-
-- Take damage (whatever type unit damage is in)
-- Regenerate HP
-- Increase Regeneration amount
-- Increase total HP
-
-*/
