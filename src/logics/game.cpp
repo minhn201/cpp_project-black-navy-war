@@ -119,10 +119,9 @@ void Game::play_turn() {
                     break; // Can only attack one ship at a time so we can go to next iteration of outer loop
 
                 }
-            } else {
-                friendly_units_.at(i).move(friendly_units_.at(i).get_speed()); // If can't attack move forward
             }
         }
+        friendly_units_.at(i).move(friendly_units_.at(i).get_speed()); // If can't attack move forward
     }
 
 
@@ -175,10 +174,9 @@ void Game::play_turn() {
                     break; // Can only attack one ship at a time so we can go to next iteration of outer loop
                     
                 }
-            } else {
-                enemy_units_.at(i).move(-enemy_units_.at(i).get_speed()); // If can't attack move forward
             }
         }
+        enemy_units_.at(i).move(-enemy_units_.at(i).get_speed()); // If can't attack move forward
     }
 
 }
@@ -233,4 +231,14 @@ void Game::purchase_income_upgrade() {
         resources_.purchase(income_upgrade_cost_); // Pay for the upgrade
         income_upgrade_cost_ *= 2; // Increase the cost
     }
+}
+
+// Returns the vector containing friendly units
+std::vector<Unit> Game::get_friendly_units() {
+    return friendly_units_;
+}
+
+// Returns the vector containing enemy units
+std::vector<Unit> Game::get_enemy_units() {
+    return enemy_units_;
 }

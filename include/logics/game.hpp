@@ -46,30 +46,12 @@ class Game {
         // Allows the user to purchase the income upgrade if they have sufficient resources
         void purchase_income_upgrade();
 
+        // Returns the vector containing friendly units
+        std::vector<Unit> get_friendly_units();
+
+        // Returns the vector containing enemy units
+        std::vector<Unit> get_enemy_units();
 
 };
 
 #endif
-
-/*
-Keeps track of the friendly units, enemy units as well as the friendly and enemy bases. Also keeps track of resources and costs
-for units and upgrades
-
-
-upgrades include:
-- increasing the amount of resources gained
-- increasing the amount of health gained per second
-- increasing bases max health
-- Increasing maximum amount of resources allowed
-
-Game class
-
-data members:
-- List of all friendly units
-- List of all enemy units
-- Friendly base
-- Enemy base
-- Resources
-- Upgrades and costs
-
-*/
