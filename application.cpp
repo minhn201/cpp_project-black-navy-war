@@ -7,6 +7,8 @@
 #include "graphics/vertex_buffer.hpp"
 #include "graphics/index_buffer.hpp"
 #include "graphics/shader.hpp"
+#include "logics/game.hpp"
+#include "logics/Unit.hpp"
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     RenderWindow* render_window = static_cast<RenderWindow*>(glfwGetWindowUserPointer(window));
@@ -50,6 +52,9 @@ int main() {
 
     // Create a RenderWindow
     RenderWindow render_window(20, 100);
+
+    // Start the Game
+    Game game;
 
     glfwSetWindowUserPointer(window, &render_window);
 
@@ -137,6 +142,12 @@ int main() {
     shader.Bind();
     shader.SetUniform4f("u_Color", 0.5f, 0.5f, 0.5f, 1.0f);
 
+    for (int i = 0; i < 6000; ++i) { // DEBUGGING: Delete afterwards
+        game.play_turn();
+    }
+    game.purchase_unit("Destroyer");// DEBUGGING
+    game.purchase_unit("Bomber");
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -161,7 +172,26 @@ int main() {
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
         glDrawElements(GL_LINES, 4, GL_UNSIGNED_INT, nullptr);
 
+        game.play_turn(); // Simulate one "turn" or fraction of a second of the game 
 
+        // Render units in the window
+        std::vector<Unit> friendly_units = game.get_friendly_units();
+        std::vector<Unit> enemy_units = game.get_enemy_units();
+
+        for (int i = 0; i < friendly_units.size(); ++i) {
+            std::vector<float> window_unit_positions = friendly_units.at(i).get_window_position(render_window);
+            float un_norm_window_unit_positions[] = {
+                window_unit_positions.at(0), window_unit_positions.at(1),
+                window_unit_positions.at(2), window_unit_positions.at(3),
+                window_unit_positions.at(4), window_unit_positions.at(5),
+                window_unit_positions.at(6), window_unit_positions.at(7)
+            };
+            float norm_window_unit_positions[8];
+            render_window.normalize_vb(un_norm_window_unit_positions, norm_window_unit_positions, 8);
+            VertexBuffer friendly_unit_vb(norm_window_unit_positions, sizeof(norm_window_unit_positions));
+            shader.SetUniform4f("u_Color", 0.0f, 0.0f, 1.0f, 1.0f);
+            render_window.draw_object(vao, friendly_unit_vb, background_color_ib); // Since unit shapes are same shape as background we can just reuse background ib
+        }
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

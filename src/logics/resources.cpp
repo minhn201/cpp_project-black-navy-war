@@ -20,7 +20,7 @@ void Resources::generate_income() {
     }
     resources_ += income_;
 
-    if (static_cast<int>(resources_) % 10 == 0) { // DEGUBGGING: REMOVE LATER
+    if (static_cast<int>(resources_) % 20 == 0) { // DEGUBGGING: REMOVE LATER
         std::cout << "Current resources: " << resources_ << '\n';
     }
 }
