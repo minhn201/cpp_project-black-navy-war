@@ -10,14 +10,30 @@
 #include "logics/game.hpp"
 #include "logics/Unit.hpp"
 
+
+struct AppData {
+  RenderWindow render_window;
+  Game game;      
+};
+
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    RenderWindow* render_window = static_cast<RenderWindow*>(glfwGetWindowUserPointer(window));
+    AppData* app_data = static_cast<AppData*>(glfwGetWindowUserPointer(window));
 
     if (action == GLFW_PRESS || action == GLFW_REPEAT) {
         if (key == GLFW_KEY_RIGHT) {
-            render_window->update_offset_right();
+            app_data->render_window.update_offset_right();
         } else if (key == GLFW_KEY_LEFT) {
-            render_window->update_offset_left();
+            app_data->render_window.update_offset_left();
+        } else if (key == GLFW_KEY_1) { // Purchase patrol boat
+            app_data->game.purchase_unit("Patrol Boat");
+        } else if (key == GLFW_KEY_2) { // Purchase destroyer
+            app_data->game.purchase_unit("Destroyer");
+        } else if (key == GLFW_KEY_3) { // Purchase submarine
+            app_data->game.purchase_unit("Submarine");
+        } else if (key == GLFW_KEY_4) { // Purchase bomber
+            app_data->game.purchase_unit("Bomber");
+        } else if (key == GLFW_KEY_5) { // Purchase helicopter
+            app_data->game.purchase_unit("Helicopter");
         }
     } 
 }
@@ -50,13 +66,10 @@ int main() {
 
     glfwSwapInterval(1);
 
-    // Create a RenderWindow
-    RenderWindow render_window(20, 100);
 
-    // Start the Game
-    Game game;
+    AppData app_data; // Initialize app data which includes info about the game and render window
 
-    glfwSetWindowUserPointer(window, &render_window);
+    glfwSetWindowUserPointer(window, &app_data); // Point the window to app_data so it can be used in key callback
 
     glfwSetKeyCallback(window, keyCallback);
 
@@ -142,12 +155,6 @@ int main() {
     shader.Bind();
     shader.SetUniform4f("u_Color", 0.5f, 0.5f, 0.5f, 1.0f);
 
-    for (int i = 0; i < 6000; ++i) { // DEBUGGING: Delete afterwards
-        game.play_turn();
-    }
-    game.purchase_unit("Destroyer");// DEBUGGING
-    game.purchase_unit("Bomber");
-
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -157,13 +164,13 @@ int main() {
         shader.Bind();
 
         shader.SetUniform4f("u_Color", 0.5f, 0.5f, 0.55f, 1.0f); // Draw background
-        render_window.draw_object(vao, background_color_vb, background_color_ib);
+        app_data.render_window.draw_object(vao, background_color_vb, background_color_ib);
 
         float norm_positions[12];
-        render_window.normalize_vb(base_positions, norm_positions, 12);
+        app_data.render_window.normalize_vb(base_positions, norm_positions, 12);
         VertexBuffer my_vb(norm_positions, sizeof(norm_positions));
         shader.SetUniform4f("u_Color", 0.1f, 0.1f, 0.1f, 1.0f); // Draw bases
-        render_window.draw_object(vao, my_vb, ib);
+        app_data.render_window.draw_object(vao, my_vb, ib);
         
 
         shader.SetUniform4f("u_Color", 0.1f, 0.1f, 0.1f, 1.0f); // Draw sea line
@@ -172,14 +179,15 @@ int main() {
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
         glDrawElements(GL_LINES, 4, GL_UNSIGNED_INT, nullptr);
 
-        game.play_turn(); // Simulate one "turn" or fraction of a second of the game 
+        app_data.game.play_turn(); // Simulate one "turn" or fraction of a second of the game 
 
         // Render units in the window
-        std::vector<Unit> friendly_units = game.get_friendly_units();
-        std::vector<Unit> enemy_units = game.get_enemy_units();
+        std::vector<Unit> friendly_units = app_data.game.get_friendly_units();
+        std::vector<Unit> enemy_units = app_data.game.get_enemy_units();
 
+        // Render friendly units
         for (int i = 0; i < friendly_units.size(); ++i) {
-            std::vector<float> window_unit_positions = friendly_units.at(i).get_window_position(render_window);
+            std::vector<float> window_unit_positions = friendly_units.at(i).get_window_position(app_data.render_window);
             float un_norm_window_unit_positions[] = {
                 window_unit_positions.at(0), window_unit_positions.at(1),
                 window_unit_positions.at(2), window_unit_positions.at(3),
@@ -187,10 +195,26 @@ int main() {
                 window_unit_positions.at(6), window_unit_positions.at(7)
             };
             float norm_window_unit_positions[8];
-            render_window.normalize_vb(un_norm_window_unit_positions, norm_window_unit_positions, 8);
+            app_data.render_window.normalize_vb(un_norm_window_unit_positions, norm_window_unit_positions, 8);
             VertexBuffer friendly_unit_vb(norm_window_unit_positions, sizeof(norm_window_unit_positions));
             shader.SetUniform4f("u_Color", 0.0f, 0.0f, 1.0f, 1.0f);
-            render_window.draw_object(vao, friendly_unit_vb, background_color_ib); // Since unit shapes are same shape as background we can just reuse background ib
+            app_data.render_window.draw_object(vao, friendly_unit_vb, background_color_ib); // Since unit shapes are same shape as background we can just reuse background ib
+        }
+
+        // Render enemy units
+        for (int i = 0; i < enemy_units.size(); ++i) {
+            std::vector<float> window_unit_positions = enemy_units.at(i).get_window_position(app_data.render_window);
+            float un_norm_window_unit_positions[] = {
+                window_unit_positions.at(0), window_unit_positions.at(1),
+                window_unit_positions.at(2), window_unit_positions.at(3),
+                window_unit_positions.at(4), window_unit_positions.at(5),
+                window_unit_positions.at(6), window_unit_positions.at(7)
+            };
+            float norm_window_unit_positions[8];
+            app_data.render_window.normalize_vb(un_norm_window_unit_positions, norm_window_unit_positions, 8);
+            VertexBuffer friendly_unit_vb(norm_window_unit_positions, sizeof(norm_window_unit_positions));
+            shader.SetUniform4f("u_Color", 0.0f, 0.0f, 1.0f, 1.0f);
+            app_data.render_window.draw_object(vao, friendly_unit_vb, background_color_ib); // Since unit shapes are same shape as background we can just reuse background ib
         }
 
         /* Swap front and back buffers */
