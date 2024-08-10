@@ -12,6 +12,7 @@ class RenderWindow {
         int render_offset_; // The current offset of where to render (can be updated by pressing the arrow keys)
 
     public:
+        RenderWindow();
         RenderWindow(unsigned int render_width, unsigned int max_window_length);
 
         int get_render_offset() const; // Returns the current render offset

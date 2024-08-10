@@ -1,5 +1,11 @@
 #include "graphics/renderer.hpp"
 
+RenderWindow::RenderWindow() {
+    render_width_ = 20;
+    max_window_length_ = 100;
+    render_offset_ = 0;
+}
+
 RenderWindow::RenderWindow(unsigned int render_width, unsigned int max_window_length) : render_width_(render_width), max_window_length_(max_window_length), render_offset_(0) {}
 
 int RenderWindow::get_render_offset() const {
