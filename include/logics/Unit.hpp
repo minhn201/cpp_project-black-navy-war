@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "logics/naval_base.hpp"
+#include "graphics/renderer.hpp"
 
 class Unit {
     public:
@@ -19,6 +20,7 @@ class Unit {
         float get_position();
         std::string get_type();
         float get_speed();
+        std::vector<float> get_window_position(RenderWindow &render_window);
 
         
 
