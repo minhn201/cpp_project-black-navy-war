@@ -68,6 +68,10 @@ void Unit::attack(Unit& other){
     other.take_damage(damage_);
 
 };
+
+void Unit::attack(NavalBase& other) {
+     other.take_damage(damage_);
+}
         
 void Unit::move(float direction){
     pos_+=direction;
@@ -76,3 +80,15 @@ void Unit::move(float direction){
 bool Unit::is_destroyed(){
     return is_destroyed_;
 };
+
+float Unit::get_position() {
+     return pos_;
+}
+
+std::string Unit::get_type() {
+     return type_;
+}
+
+float Unit::get_speed() {
+     return speed_;
+}

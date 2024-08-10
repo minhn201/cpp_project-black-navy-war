@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "logics/naval_base.hpp"
 
 class Unit {
     public:
@@ -11,9 +12,13 @@ class Unit {
         ~Unit();
 
         void attack(Unit& other);
+        void attack(NavalBase& other);
         void take_damage(float damage);
         void move(float direction);
         bool is_destroyed();
+        float get_position();
+        std::string get_type();
+        float get_speed();
 
         
 
