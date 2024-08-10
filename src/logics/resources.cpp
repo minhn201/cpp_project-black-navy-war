@@ -1,10 +1,11 @@
 #include "logics/resources.hpp"
+#include <iostream>
 
 
 Resources::Resources() {
     resources_ = 0.0f;
     max_resources_ = 400.0f;
-    income_ = 5.0f;
+    income_ = 0.1f;
 }
 
 // Returns the current amount of resources 
@@ -18,6 +19,10 @@ void Resources::generate_income() {
         return;
     }
     resources_ += income_;
+
+    if (static_cast<int>(resources_) % 10 == 0) { // DEGUBGGING: REMOVE LATER
+        std::cout << "Current resources: " << resources_ << '\n';
+    }
 }
 
 // Decreases resources by the amount specified by cost
@@ -32,5 +37,5 @@ void Resources::upgrade_max_resources() {
 
 // Increases the income genereated per second
 void Resources::upgrade_income() {
-    income_ += 2.5f;
+    income_ += 0.1f;
 }

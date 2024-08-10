@@ -17,6 +17,7 @@ add_executable(black_navy_war application.cpp
     src/shader.cpp
     src/logics/Unit.cpp
     src/logics/naval_base.cpp
-    src/logics/resources.cpp)
+    src/logics/resources.cpp
+    src/logics/game.cpp)
 
 target_link_libraries(black_navy_war glfw OpenGL::GL GLEW::GLEW)
