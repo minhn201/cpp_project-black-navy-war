@@ -6,6 +6,8 @@
 #include "logics/naval_base.hpp"
 #include <vector>
 #include <string>
+#include <ctime>
+#include <cstdlib>
 
 class Game {
     private:
@@ -33,6 +35,11 @@ class Game {
         // Units move forward
         // Units attack if they are sufficiently close
         void play_turn();
+
+        // Plays the next turn of the loop for the enemy computer player
+        // This function will randomly decide to generate a unit of any type
+        // There is a high chance nothing happens when this function is called
+        void play_enemy_turn();
 
         // Allows the user to purchase the max health upgrade if they have sufficient resources
         void purchase_max_health_upgrade();

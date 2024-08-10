@@ -188,6 +188,7 @@ int main() {
         glDrawElements(GL_LINES, 4, GL_UNSIGNED_INT, nullptr);
 
         app_data.game.play_turn(); // Simulate one "turn" or fraction of a second of the game 
+        app_data.game.play_enemy_turn();
 
         // Render units in the window
         std::vector<Unit> friendly_units = app_data.game.get_friendly_units();

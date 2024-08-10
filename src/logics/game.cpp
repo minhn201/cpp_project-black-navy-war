@@ -1,4 +1,5 @@
 #include "logics/game.hpp"
+#include <iostream>
 
 // Specify the cost of different units
 const float patrol_cost = 70.0f;
@@ -23,6 +24,7 @@ Game::Game() {
     max_health_upgrade_cost_ = 200.0f;
     max_resources_upgrade_cost_ = 200.0f;
 
+    std::srand(std::time(0)); // Initialize seed for random enemy unit creation
     // Additional data members are default constructed upon declaration
 }
 
@@ -127,7 +129,7 @@ void Game::play_turn() {
 
     // Make moves for enemy units
     for (int i = 0; i < enemy_units_.size(); ++i) {
-        if (enemy_units_.at(i).get_position() - unit_range <= 100.0f) { // If in range of enemy base shoot
+        if (enemy_units_.at(i).get_position() - unit_range <= 0.0f) { // If in range of enemy base shoot
             enemy_units_.at(i).attack(friendly_base_);
             continue; // Can only attack one thing at a time so we can go to next unit
         }
@@ -180,6 +182,30 @@ void Game::play_turn() {
     }
 
 }
+
+
+// Plays the next turn of the loop for the enemy computer player
+// This function will randomly decide to generate a unit of any type
+// There is a high chance nothing happens when this function is called
+void Game::play_enemy_turn() {
+    if ((std::rand() % 10000) == 0) {
+        std::cout << "Making a enemy unit\n";
+        int type = std::rand() % 5;
+        
+        if (type == 0) { // Patrol boat
+            enemy_units_.emplace_back("Patrol Boat", false);
+        } else if (type == 1) { // Destroyer
+            enemy_units_.emplace_back("Destroyer", false);
+        } else if (type == 2) { // Submarine
+            enemy_units_.emplace_back("Submarine", false);
+        } else if (type == 3) { // Bomber
+            enemy_units_.emplace_back("Bomber", false);
+        } else if (type == 4) { // Helicopter
+            enemy_units_.emplace_back("Helicopter", false);
+        }
+    }
+}
+
 
 // Allows the user to purchase the max health upgrade if they have sufficient resources
 void Game::purchase_max_health_upgrade() {
