@@ -9,7 +9,7 @@ const float helicopter_cost = 260.0f;
 
 
 // Set max upgrade cost to avoid infinite upgrading
-const float max_upgrade_cost = 3200.0f;
+const float max_upgrade_cost = 800.0f;
 
 
 // Set unit range

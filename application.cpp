@@ -34,6 +34,14 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
             app_data->game.purchase_unit("Bomber");
         } else if (key == GLFW_KEY_5) { // Purchase helicopter
             app_data->game.purchase_unit("Helicopter");
+        } else if (key == GLFW_KEY_Z) { // Upgrade income
+            app_data->game.purchase_income_upgrade();
+        } else if (key == GLFW_KEY_X) { // Upgrade base health regeneration
+            app_data->game.purchase_health_regen_upgrade();
+        } else if (key == GLFW_KEY_C) { // Upgrade max resources
+            app_data->game.purhcase_max_resource_upgrade();
+        } else if (key == GLFW_KEY_V) { // Upgrade max base health
+            app_data->game.purchase_max_health_upgrade();
         }
     } 
 }

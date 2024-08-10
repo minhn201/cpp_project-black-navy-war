@@ -32,7 +32,7 @@ void Resources::purchase(float cost) {
 
 // Increases the maximum resources
 void Resources::upgrade_max_resources() {
-    resources_ *= 2.0f;
+    max_resources_ *= 2.0f;
 }
 
 // Increases the income genereated per second
