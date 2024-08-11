@@ -22,8 +22,8 @@ const float speed_submarine = 0.007f;
 const float speed_bomber = 0.02f;
 const float speed_helicopter = 0.005f;
 
-const float damage_mg = 0.5f;
-const float damage_topedo = 2.0f;
+const float damage_mg = 0.05f;
+const float damage_topedo = 1.0f;
 const float damage_depth_charge = 3.0f;
 
 std::vector<float> patrol_shape{
@@ -218,6 +218,15 @@ void Unit::attack(Unit &other)
 
 void Unit::attack(NavalBase &other)
 {
+     if (type_ == type_patrol || type_ == type_destroyer || type_ == type_helicopter)
+     {
+          damage_ = damage_mg;
+     }
+     else
+     {
+          damage_ = damage_topedo;
+     }
+
      other.take_damage(damage_);
 }
 
