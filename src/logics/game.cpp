@@ -250,7 +250,7 @@ void Game::play_turn()
 // There is a high chance nothing happens when this function is called
 void Game::play_enemy_turn()
 {
-    if ((std::rand() % 8000) == 0)
+    if ((std::rand() % 2000) == 0)
     {
         int type = std::rand() % 5;
 
@@ -359,10 +359,12 @@ std::vector<Unit> Game::get_enemy_units()
     return enemy_units_;
 }
 
-NavalBase Game::get_friendly_base() {
+NavalBase Game::get_friendly_base()
+{
     return friendly_base_;
 }
 
-NavalBase Game::get_enemy_base() {
+NavalBase Game::get_enemy_base()
+{
     return enemy_base_;
 }
