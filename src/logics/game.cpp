@@ -216,8 +216,8 @@ void Game::play_turn()
                     }
                     break; // Can only attack one ship at a time so we can go to next iteration of outer loop
                 }
-                else if (enemy_units_.at(i).get_type() == "Bomber" && (friendly_units_.at(j).get_type() == "Patrol Boat" || friendly_units_.at(j).get_type() == "Destroyer"))
-                { // Bomber can only attack ships
+                else if (enemy_units_.at(i).get_type() == "Bomber" && (friendly_units_.at(j).get_type() == "Patrol Boat" || friendly_units_.at(j).get_type() == "Destroyer" || friendly_units_.at(j).get_type() == "Submarine"))
+                { // Bomber can only attack ships and submarines
                     enemy_units_.at(i).attack(friendly_units_.at(j));
                     did_attack = true;
                     if (friendly_units_.at(j).is_destroyed())
