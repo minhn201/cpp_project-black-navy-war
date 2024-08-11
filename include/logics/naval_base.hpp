@@ -18,6 +18,8 @@ class NavalBase {
         // Returns the amount of health that the base curretly has
         float get_health();
 
+        float get_max_health();
+
         // returns true if the base has been destroyed
         bool is_destroyed();
 

@@ -61,6 +61,10 @@ public:
 
     // Returns the vector containing enemy units
     std::vector<Unit> get_enemy_units();
+
+    NavalBase get_friendly_base();
+
+    NavalBase get_enemy_base();
 };
 
 #endif

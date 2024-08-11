@@ -252,7 +252,6 @@ void Game::play_enemy_turn()
 {
     if ((std::rand() % 8000) == 0)
     {
-        std::cout << "Making a enemy unit\n";
         int type = std::rand() % 5;
 
         if (type == 0)
@@ -358,4 +357,12 @@ std::vector<Unit> Game::get_friendly_units()
 std::vector<Unit> Game::get_enemy_units()
 {
     return enemy_units_;
+}
+
+NavalBase Game::get_friendly_base() {
+    return friendly_base_;
+}
+
+NavalBase Game::get_enemy_base() {
+    return enemy_base_;
 }

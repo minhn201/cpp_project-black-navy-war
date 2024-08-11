@@ -19,10 +19,6 @@ void Resources::generate_income() {
         return;
     }
     resources_ += income_;
-
-    if (static_cast<int>(resources_) % 20 == 0) { // DEGUBGGING: REMOVE LATER
-        std::cout << "Current resources: " << resources_ << '\n';
-    }
 }
 
 // Decreases resources by the amount specified by cost

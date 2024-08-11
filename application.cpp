@@ -375,6 +375,31 @@ int main()
             app_data.render_window.draw_object(vao, friendly_unit_vb, background_color_ib); // Since unit shapes are same shape as background we can just reuse background ib
         }
 
+        NavalBase friendly_base = app_data.game.get_friendly_base();
+        NavalBase enemy_base = app_data.game.get_enemy_base();
+
+        float friendly_health_bar[] = {
+            -1.0f,                                                                      0.9f, 
+            0.0f - (1 - (friendly_base.get_health() / friendly_base.get_max_health())), 0.9f, 
+            0.0f - (1 - (friendly_base.get_health() / friendly_base.get_max_health())), 1.0f, 
+            -1.0f,                                                                      1.0f 
+        };
+
+        float enemy_health_bar[] = {
+            0.0f + (1 - (enemy_base.get_health() / enemy_base.get_max_health())), 0.9f,
+            1.0f, 0.9f,
+            1.0f, 1.0f,
+            0.0f + (1 - (enemy_base.get_health() / enemy_base.get_max_health())), 1.0f
+        };
+
+        VertexBuffer friendly_health_bar_vb(friendly_health_bar, sizeof(friendly_health_bar));
+        shader.SetUniform4f("u_Color", 0.0f, 0.0f, 1.0f, 1.0f);
+        app_data.render_window.draw_object(vao, friendly_health_bar_vb, background_color_ib); // Since health bar shapes are same shape as background we can just reuse background ib
+
+        VertexBuffer enemy_health_bar_vb(enemy_health_bar, sizeof(enemy_health_bar));
+        shader.SetUniform4f("u_Color", 1.0f, 0.0f, 0.0f, 1.0f);
+        app_data.render_window.draw_object(vao, enemy_health_bar_vb, background_color_ib); // Since health bar shapes are same shape as background we can just reuse background ib
+
         RenderImGui(app_data.game);
 
         /* Swap front and back buffers */

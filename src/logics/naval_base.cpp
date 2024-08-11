@@ -20,15 +20,15 @@ void NavalBase::take_damage(float damage) {
     if (health_ <= 0.0f) {
         is_destroyed_ = true;
     }
-
-    if (static_cast<int>(health_) % 100 == 0) { // DEGUBGGING: REMOVE LATER
-        std::cout << "Current health: " << health_ << '\n';
-    }
 }
 
 // Returns the amount of health that the base curretly has
 float NavalBase::get_health() {
     return health_;
+}
+
+float NavalBase::get_max_health() {
+    return max_health_;
 }
 
 // returns true if the base has been destroyed
