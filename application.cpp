@@ -91,20 +91,37 @@ void OnButtonClick(std::string type, Game &game)
     {
         game.purchase_unit("Patrol Boat");
     }
-
-    if (type == "Destroyer")
+    else if (type == "Destroyer")
     {
         game.purchase_unit("Destroyer");
     }
-
-    if (type == "Submarine")
+    else if (type == "Submarine")
     {
         game.purchase_unit("Submarine");
     }
-
-    if (type == "Helicopter")
+    else if (type == "Bomber")
+    {
+        game.purchase_unit("Bomber");
+    }
+    else if (type == "Helicopter")
     {
         game.purchase_unit("Helicopter");
+    }
+    else if (type == "Supply Line")
+    {
+        game.purchase_income_upgrade();
+    }
+    else if (type == "Repair Equipment")
+    {
+        game.purchase_health_regen_upgrade();
+    }
+    else if (type == "Resource Warehouse")
+    {
+        game.purhcase_max_resource_upgrade();
+    }
+    else if (type == "Enhance Vitality")
+    {
+        game.purchase_max_health_upgrade();
     }
 }
 
@@ -115,27 +132,69 @@ void RenderImGui(Game &game)
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::Begin("GUI");
-    ImGui::Text("Resources: %d", static_cast<int>(game.get_game_resources().get_resources()));
+    // Add feature to keep the GUI window fixed
+    ImGuiIO &io = ImGui::GetIO();
+    ImGui::SetNextWindowPos(ImVec2(0, io.DisplaySize.y - 150)); // Set position at the bottom
+    ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x, 150));
 
-    if (ImGui::Button("Patrol Boat"))
+    // Add flag to make it non-resizable
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse;
+
+    ImGui::Begin("GUI");
+
+    // Create two columns
+    ImGui::Columns(2, NULL, false); // 2 columns, no border
+
+    // First column: Units
+    if (ImGui::Button("Patrol Boat (70)"))
     {
         OnButtonClick("Patrol Boat", game);
     }
 
-    if (ImGui::Button("Destroyer"))
+    if (ImGui::Button("Destroyer (200)"))
     {
         OnButtonClick("Destroyer", game);
     }
 
-    if (ImGui::Button("Submarine"))
+    if (ImGui::Button("Submarine (120)"))
     {
         OnButtonClick("Submarine", game);
     }
 
-    if (ImGui::Button("Helicopter"))
+    if (ImGui::Button("Bomber (160)"))
+    {
+        OnButtonClick("Bomber", game);
+    }
+
+    if (ImGui::Button("Helicopter (260)"))
     {
         OnButtonClick("Helicopter", game);
+    }
+
+    // Move to the second column
+    ImGui::NextColumn();
+
+    // Second column: Display resources and upgrades
+    ImGui::Text("Resources: %d", static_cast<int>(game.get_game_resources().get_resources()));
+
+    if (ImGui::Button("Supply Line"))
+    {
+        OnButtonClick("Supply Line", game);
+    }
+
+    if (ImGui::Button("Repair Equipment"))
+    {
+        OnButtonClick("Repair Equipment", game);
+    }
+
+    if (ImGui::Button("Resource Warehouse"))
+    {
+        OnButtonClick("Resource Warehouse", game);
+    }
+
+    if (ImGui::Button("Enhance Vitality"))
+    {
+        OnButtonClick("Enhance Vitality", game);
     }
 
     ImGui::End();
