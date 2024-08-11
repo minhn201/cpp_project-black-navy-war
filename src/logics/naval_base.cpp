@@ -1,11 +1,12 @@
 #include "logics/naval_base.hpp"
-
+#include <iostream>
 
 // default constructor
 NavalBase::NavalBase() {
     max_health_ = 5000.0f;
     health_ = 5000.0f;
     regeneration_ = 0.5f;
+    is_destroyed_ = false;
 }
 
 
@@ -15,6 +16,14 @@ void NavalBase::take_damage(float damage) {
         return;
     }
     health_ -= damage;
+    
+    if (health_ <= 0.0f) {
+        is_destroyed_ = true;
+    }
+
+    if (static_cast<int>(health_) % 100 == 0) { // DEGUBGGING: REMOVE LATER
+        std::cout << "Current health: " << health_ << '\n';
+    }
 }
 
 // Returns the amount of health that the base curretly has

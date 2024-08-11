@@ -222,7 +222,7 @@ int main() {
             float norm_window_unit_positions[8];
             app_data.render_window.normalize_vb(un_norm_window_unit_positions, norm_window_unit_positions, 8);
             VertexBuffer friendly_unit_vb(norm_window_unit_positions, sizeof(norm_window_unit_positions));
-            shader.SetUniform4f("u_Color", 0.0f, 0.0f, 1.0f, 1.0f);
+            shader.SetUniform4f("u_Color", 1.0f, 0.0f, 0.0f, 1.0f);
             app_data.render_window.draw_object(vao, friendly_unit_vb, background_color_ib); // Since unit shapes are same shape as background we can just reuse background ib
         }
 

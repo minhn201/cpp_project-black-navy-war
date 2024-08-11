@@ -1,4 +1,5 @@
 #include "logics/Unit.hpp"
+#include <iostream>
 
 const std::string type_patrol = "Patrol Boat";
 const std::string type_destroyer = "Destroyer";
@@ -18,11 +19,11 @@ const float speed_submarine = 0.005f;
 const float speed_bomber = 0.01f;
 const float speed_helicopter = 0.005f;
 
-const float damage_patrol = 5.0f;
-const float damage_destroyer = 5.0f;
-const float damage_submarine = 5.0f;
-const float damage_bomber = 5.0f;
-const float damage_helicopter = 5.0f;
+const float damage_patrol = 0.5f;
+const float damage_destroyer = 0.5f;
+const float damage_submarine = 0.5f;
+const float damage_bomber = 0.5f;
+const float damage_helicopter = 0.5f;
 
 
 std::vector<float> patrol_shape {

@@ -76,9 +76,14 @@ void Game::play_turn() {
     for (int i = 0; i < friendly_units_.size(); ++i) {
         if (friendly_units_.at(i).get_position() + unit_range >= 100.0f) { // If in range of enemy base shoot
             friendly_units_.at(i).attack(enemy_base_);
+            if (enemy_base_.is_destroyed()) { // friendly player wins
+            std::cout << "You Win!\n";
+                exit(0);
+            }
             continue; // Can only attack one thing at a time so we can go to next unit
         }
 
+        bool did_attack = false;
         for (int j = 0; j < enemy_units_.size(); ++j) {
             // Check if they are close enough to attack unit or base
             // If they are then check if the type are the same
@@ -87,6 +92,7 @@ void Game::play_turn() {
                 // attack based on types
                 if (friendly_units_.at(i).get_type() == "Patrol Boat" && enemy_units_.at(j).get_type() != "Submarine") { // Patrol can't shoot submarines
                     friendly_units_.at(i).attack(enemy_units_.at(j));
+                    did_attack = true;
                     if (enemy_units_.at(j).is_destroyed()) { // If the enemy unit is destroyed then delete it
                         enemy_units_.erase(enemy_units_.begin() + j); 
                     }
@@ -94,6 +100,7 @@ void Game::play_turn() {
 
                 } else if (friendly_units_.at(i).get_type() == "Destroyer") { // Destroyer can attack anything
                     friendly_units_.at(i).attack(enemy_units_.at(j));
+                    did_attack = true;
                     if (enemy_units_.at(j).is_destroyed()) { // If the enemy unit is destroyed then delete it
                         enemy_units_.erase(enemy_units_.begin() + j); 
                     }
@@ -101,6 +108,7 @@ void Game::play_turn() {
 
                 } else if (friendly_units_.at(i).get_type() == "Submarine" && (enemy_units_.at(j).get_type() == "Submarine" || enemy_units_.at(j).get_type() == "Patrol Boat" || enemy_units_.at(j).get_type() == "Destroyer")) { // Sumbarine can't attack air units
                     friendly_units_.at(i).attack(enemy_units_.at(j));
+                    did_attack = true;
                     if (enemy_units_.at(j).is_destroyed()) { // If the enemy unit is destroyed then delete it
                         enemy_units_.erase(enemy_units_.begin() + j); 
                     }
@@ -108,6 +116,7 @@ void Game::play_turn() {
 
                 } else if (friendly_units_.at(i).get_type() == "Bomber" && (enemy_units_.at(j).get_type() == "Patrol Boat" || enemy_units_.at(j).get_type() == "Destroyer")) { // Bomber can only attack ships
                     friendly_units_.at(i).attack(enemy_units_.at(j));
+                    did_attack = true;
                     if (enemy_units_.at(j).is_destroyed()) { // If the enemy unit is destroyed then delete it
                         enemy_units_.erase(enemy_units_.begin() + j); 
                     }
@@ -115,6 +124,7 @@ void Game::play_turn() {
 
                 } else if (friendly_units_.at(i).get_type() == "Helicopter") { // Helicopter can attack all units
                     friendly_units_.at(i).attack(enemy_units_.at(j));
+                    did_attack = true;
                     if (enemy_units_.at(j).is_destroyed()) { // If the enemy unit is destroyed then delete it
                         enemy_units_.erase(enemy_units_.begin() + j); 
                     }
@@ -123,7 +133,9 @@ void Game::play_turn() {
                 }
             }
         }
-        friendly_units_.at(i).move(friendly_units_.at(i).get_speed()); // If can't attack move forward
+        if (!did_attack) {
+            friendly_units_.at(i).move(friendly_units_.at(i).get_speed()); // If can't attack move forward
+        }
     }
 
 
@@ -131,9 +143,14 @@ void Game::play_turn() {
     for (int i = 0; i < enemy_units_.size(); ++i) {
         if (enemy_units_.at(i).get_position() - unit_range <= 0.0f) { // If in range of enemy base shoot
             enemy_units_.at(i).attack(friendly_base_);
+            if (friendly_base_.is_destroyed()) { // friendly player wins
+            std::cout << " You Lose!\n";
+                exit(0);
+            }
             continue; // Can only attack one thing at a time so we can go to next unit
         }
 
+        bool did_attack = false;
         for (int j = 0; j < friendly_units_.size(); ++j) {
             // Check if they are close enough to attack unit or base
             // If they are then check if the type are the same
@@ -142,6 +159,7 @@ void Game::play_turn() {
                 // attack based on types
                 if (enemy_units_.at(i).get_type() == "Patrol Boat" && friendly_units_.at(j).get_type() != "Submarine") { // Patrol can't shoot submarines
                     enemy_units_.at(i).attack(friendly_units_.at(j));
+                    did_attack = true;
                     if (friendly_units_.at(j).is_destroyed()) { // If the enemy unit is destroyed then delete it
                         friendly_units_.erase(friendly_units_.begin() + j); 
                     }
@@ -149,6 +167,7 @@ void Game::play_turn() {
 
                 } else if (enemy_units_.at(i).get_type() == "Destroyer") { // Destroyer can attack anything
                     enemy_units_.at(i).attack(friendly_units_.at(j));
+                    did_attack = true;
                     if (friendly_units_.at(j).is_destroyed()) { // If the enemy unit is destroyed then delete it
                         friendly_units_.erase(friendly_units_.begin() + j); 
                     }
@@ -156,6 +175,7 @@ void Game::play_turn() {
 
                 } else if (enemy_units_.at(i).get_type() == "Submarine" && (friendly_units_.at(j).get_type() == "Submarine" || friendly_units_.at(j).get_type() == "Patrol Boat" || friendly_units_.at(j).get_type() == "Destroyer")) { // Sumbarine can't attack air units
                     enemy_units_.at(i).attack(friendly_units_.at(j));
+                    did_attack = true;
                     if (friendly_units_.at(j).is_destroyed()) { // If the enemy unit is destroyed then delete it
                         friendly_units_.erase(friendly_units_.begin() + j); 
                     }
@@ -163,6 +183,7 @@ void Game::play_turn() {
 
                 } else if (enemy_units_.at(i).get_type() == "Bomber" && (friendly_units_.at(j).get_type() == "Patrol Boat" || friendly_units_.at(j).get_type() == "Destroyer")) { // Bomber can only attack ships
                     enemy_units_.at(i).attack(friendly_units_.at(j));
+                    did_attack = true;
                     if (friendly_units_.at(j).is_destroyed()) { // If the enemy unit is destroyed then delete it
                         friendly_units_.erase(friendly_units_.begin() + j); 
                     }
@@ -170,6 +191,7 @@ void Game::play_turn() {
 
                 } else if (enemy_units_.at(i).get_type() == "Helicopter") { // Helicopter can attack all units
                     enemy_units_.at(i).attack(friendly_units_.at(j));
+                    did_attack = true;
                     if (friendly_units_.at(j).is_destroyed()) { // If the enemy unit is destroyed then delete it
                         friendly_units_.erase(friendly_units_.begin() + j); 
                     }
@@ -178,7 +200,9 @@ void Game::play_turn() {
                 }
             }
         }
-        enemy_units_.at(i).move(-enemy_units_.at(i).get_speed()); // If can't attack move forward
+        if (!did_attack) {
+            enemy_units_.at(i).move(-enemy_units_.at(i).get_speed()); // If can't attack move forward
+        }
     }
 
 }
@@ -188,7 +212,7 @@ void Game::play_turn() {
 // This function will randomly decide to generate a unit of any type
 // There is a high chance nothing happens when this function is called
 void Game::play_enemy_turn() {
-    if ((std::rand() % 10000) == 0) {
+    if ((std::rand() % 8000) == 0) {
         std::cout << "Making a enemy unit\n";
         int type = std::rand() % 5;
         
