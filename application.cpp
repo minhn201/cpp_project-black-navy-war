@@ -177,22 +177,72 @@ void RenderImGui(Game &game)
     // Second column: Display resources and upgrades
     ImGui::Text("Resources: %d", static_cast<int>(game.get_game_resources().get_resources()));
 
-    if (ImGui::Button("Supply Line"))
+    auto income_upgrade = game.get_income_upgrade_cost();
+    auto health_regen_upgrade = game.get_health_regen_upgrade_cost();
+    auto max_health_upgrade = game.get_max_health_upgrade_cost();
+    auto max_resource_upgrade = game.get_max_resources_upgrade_cost();
+    auto max_upgrade_cost = game.get_max_upgrade_cost();
+
+    std::string supply_line;
+
+    if (income_upgrade >= max_upgrade_cost)
+    {
+        supply_line = "Supply Line (maxed)";
+    }
+    else
+    {
+        supply_line = "Supply Line (" + std::to_string(static_cast<int>(income_upgrade)) + ")";
+    }
+
+    if (ImGui::Button(supply_line.c_str()))
     {
         OnButtonClick("Supply Line", game);
     }
 
-    if (ImGui::Button("Repair Equipment"))
+    std::string repair_equipment;
+
+    if (health_regen_upgrade >= max_upgrade_cost)
+    {
+        repair_equipment = "Repair Equipment (maxed)";
+    }
+    else
+    {
+        repair_equipment = "Repair Equipment (" + std::to_string(static_cast<int>(health_regen_upgrade)) + ")";
+    }
+
+    if (ImGui::Button(repair_equipment.c_str()))
     {
         OnButtonClick("Repair Equipment", game);
     }
 
-    if (ImGui::Button("Resource Warehouse"))
+    std::string resource_warehouse;
+
+    if (max_resource_upgrade >= max_upgrade_cost)
+    {
+        resource_warehouse = "Resource Warehouse (maxed)";
+    }
+    else
+    {
+        resource_warehouse = "Resource Warehouse (" + std::to_string(static_cast<int>(max_resource_upgrade)) + ")";
+    }
+
+    if (ImGui::Button(resource_warehouse.c_str()))
     {
         OnButtonClick("Resource Warehouse", game);
     }
 
-    if (ImGui::Button("Enhance Vitality"))
+    std::string enhance_vitality;
+
+    if (max_health_upgrade >= max_upgrade_cost)
+    {
+        enhance_vitality = "Enhance Vitality (maxed)";
+    }
+    else
+    {
+        enhance_vitality = "Enhance Vitality (" + std::to_string(static_cast<int>(max_health_upgrade)) + ")";
+    }
+
+    if (ImGui::Button(enhance_vitality.c_str()))
     {
         OnButtonClick("Enhance Vitality", game);
     }
@@ -379,18 +429,16 @@ int main()
         NavalBase enemy_base = app_data.game.get_enemy_base();
 
         float friendly_health_bar[] = {
-            -1.0f,                                                                      0.9f, 
-            0.0f - (1 - (friendly_base.get_health() / friendly_base.get_max_health())), 0.9f, 
-            0.0f - (1 - (friendly_base.get_health() / friendly_base.get_max_health())), 1.0f, 
-            -1.0f,                                                                      1.0f 
-        };
+            -1.0f, 0.9f,
+            0.0f - (1 - (friendly_base.get_health() / friendly_base.get_max_health())), 0.9f,
+            0.0f - (1 - (friendly_base.get_health() / friendly_base.get_max_health())), 1.0f,
+            -1.0f, 1.0f};
 
         float enemy_health_bar[] = {
             0.0f + (1 - (enemy_base.get_health() / enemy_base.get_max_health())), 0.9f,
             1.0f, 0.9f,
             1.0f, 1.0f,
-            0.0f + (1 - (enemy_base.get_health() / enemy_base.get_max_health())), 1.0f
-        };
+            0.0f + (1 - (enemy_base.get_health() / enemy_base.get_max_health())), 1.0f};
 
         VertexBuffer friendly_health_bar_vb(friendly_health_bar, sizeof(friendly_health_bar));
         shader.SetUniform4f("u_Color", 0.0f, 0.0f, 1.0f, 1.0f);
