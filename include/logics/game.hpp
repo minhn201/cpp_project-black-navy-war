@@ -53,6 +53,16 @@ public:
     // Allows the user to purchase the income upgrade if they have sufficient resources
     void purchase_income_upgrade();
 
+    float get_income_upgrade_cost();
+
+    float get_health_regen_upgrade_cost();
+
+    float get_max_health_upgrade_cost();
+
+    float get_max_resources_upgrade_cost();
+
+    float get_max_upgrade_cost();
+
     // Return the amount of resources available
     Resources get_game_resources();
 

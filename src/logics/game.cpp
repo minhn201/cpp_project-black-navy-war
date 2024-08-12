@@ -341,6 +341,31 @@ void Game::purchase_income_upgrade()
     }
 }
 
+float Game::get_income_upgrade_cost()
+{
+    return income_upgrade_cost_;
+}
+
+float Game::get_health_regen_upgrade_cost()
+{
+    return health_regen_upgrade_cost_;
+}
+
+float Game::get_max_health_upgrade_cost()
+{
+    return max_health_upgrade_cost_;
+}
+
+float Game::get_max_resources_upgrade_cost()
+{
+    return max_resources_upgrade_cost_;
+}
+
+float Game::get_max_upgrade_cost()
+{
+    return max_upgrade_cost;
+}
+
 // Return the amount of resources available
 Resources Game::get_game_resources()
 {
