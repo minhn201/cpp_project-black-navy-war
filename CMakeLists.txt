@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
-project(black_navy_war LANGUAGES CXX)
+project(cpp_black_navy_war LANGUAGES CXX)
 
 # Get required packages
 find_package(glfw3 REQUIRED)
@@ -37,6 +37,15 @@ target_include_directories(black_navy_war PRIVATE
                             ${IMGUI_DIR}
                             include)
 
-target_link_libraries(black_navy_war glfw OpenGL::GL GLEW::GLEW)
+target_link_libraries(black_navy_war 
+    glfw 
+    OpenGL::GL 
+    GLEW::GLEW 
+    dl  
+)
 
+# Install the black_navy_war program.
+install(TARGETS black_navy_war DESTINATION bin)
 
+# Install the demo script.
+install(PROGRAMS demo DESTINATION bin)
