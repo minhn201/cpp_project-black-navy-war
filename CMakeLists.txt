@@ -22,11 +22,11 @@ set(IMGUI_SOURCES
 
 
 add_executable(black_navy_war 
-    application.cpp 
-    src/renderer.cpp 
-    src/vertex_buffer.cpp 
-    src/index_buffer.cpp
-    src/shader.cpp
+    app/application.cpp 
+    src/graphics/renderer.cpp 
+    src/graphics/vertex_buffer.cpp 
+    src/graphics/index_buffer.cpp
+    src/graphics/shader.cpp
     src/logics/Unit.cpp
     src/logics/naval_base.cpp
     src/logics/resources.cpp
